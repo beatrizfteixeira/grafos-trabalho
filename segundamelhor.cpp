@@ -69,7 +69,7 @@ int union1(int i, int soma)
 	return soma;
 }
 
-// Função para encontrar o segundo
+// Função para encontrar a segunda
 // melhor árvore geradora mínima
 int union2(int i, int soma)
 {
@@ -88,7 +88,43 @@ int union2(int i, int soma)
 	}
 	return soma;
 }
+int segundaArvore(int V, int E){
+	// inicializando o custo da segunda arvore geradora
+	int seg_melhor_arv = INT_MAX;
 
+	// setando a soma para ZERO
+	int soma = 0;
+	int j;
+	for (j = 0; j < atual.size(); j++) {
+		initialise(V);
+		edg = 0;
+		for (int i = 0; i < E; i++) {
+
+            // excluindo uma aresta da
+            //arvore geradora minima de cada vez
+            // e formando a árvore geradora
+            // com o restante
+            // arestas
+			if (i == atual[j])
+				continue;
+			soma = union2(i, soma);
+		}
+            // verificando se o número de arestas = V-1 ou não
+            // já que o número de arestas em uma árvore geradora de
+            // gráfico com V vértices é (V-1)
+		if (edg != V - 1) {
+			soma = 0;
+			continue;
+		}
+
+		// // armazenando a soma mínima
+        // em seg_melhor_arv
+		if (seg_melhor_arv > soma)
+			seg_melhor_arv = soma;
+		soma = 0;
+	}
+	return seg_melhor_arv;
+}
 int programa() {
     // V-> Número de vértices,
     // E-> Número de arestas
@@ -129,7 +165,7 @@ int programa() {
 	for (int i = 0; i < E; i++) {
 		soma = union1(i, soma);
 	}
-
+	int primeira = soma;
 	// imprimindo o custo da primeira arvore
 	cout << "primeira arvore geradora minima: " << soma << "\n";
 
@@ -167,7 +203,9 @@ int programa() {
 			seg_melhor_arv = soma;
 		soma = 0;
 	}
-
+	if (seg_melhor_arv == primeira){
+		seg_melhor_arv = segundaArvore(V,E);
+	}
 	// imprimindo o custo da segunda arvore
 	cout << "segunda arvore geradora minima: "
 		<< seg_melhor_arv << "\n";
@@ -184,6 +222,7 @@ int main()
 
     while (n<nCasos){
         programa();
+		atual.clear();
         n++;
     }
 
